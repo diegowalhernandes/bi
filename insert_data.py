@@ -1,3 +1,6 @@
+import sqlite3
+
+# Lista de transações a ser inserida
 transacoes = [
     {"data_entrada": "2024-01-10", "valor": 150.75, "categoria": "Alimentação", "empresa": "Supermercado XYZ"},
     {"data_saida": "2024-02-10", "valor": 80.00, "categoria": "Transporte", "empresa": "Empresa de Táxi ABC"},
@@ -36,3 +39,27 @@ transacoes = [
     {"data_saida": "2026-11-30", "valor": 250.00, "categoria": "Entretenimento", "empresa": "Cinema XYZ"},
     {"data_entrada": "2026-12-05", "data_saida": "2026-12-12", "valor": 310.00, "categoria": "Alimentação", "empresa": "Supermercado ABC"}
 ]
+
+# Função para inserir os dados
+def insert_data(transacoes):
+    conn = sqlite3.connect('transacoes.db')
+    cursor = conn.cursor()
+    
+    for transacao in transacoes:
+        cursor.execute('''
+            INSERT INTO transacoes (data_entrada, data_saida, valor, categoria, empresa)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (
+            transacao.get("data_entrada"),
+            transacao.get("data_saida"),
+            transacao["valor"],
+            transacao["categoria"],
+            transacao["empresa"]
+        ))
+    
+    conn.commit()
+    conn.close()
+
+if __name__ == '__main__':
+    insert_data(transacoes)
+    print("Dados inseridos com sucesso!")
